@@ -15,6 +15,20 @@ update_os
 
 setup_uv
 
+# <--- INSERT THE FIX FOR POSTGRESQL 16 --->
+msg_info "Add the official PostgreSQL APT repo for Debian Trixie (ARM64)"
+$STD mkdir -p /usr/share/postgresql-common/pgdg
+$STD cat > /etc/apt/sources.list.d/pgdg.list <<EOF
+deb [arch=arm64 signed-by=/usr/share/postgresql-common/pgdg/apt-source.gpg] https://apt.postgresql.org/pub/repos/apt trixie-pgdg main
+EOF
+$STD curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor -o /usr/share/postgresql-common/pgdg/apt-source.gpg
+$STD cat > /etc/apt/preferences.d/postgresql <<EOF
+Package: postgresql* libpq* libecpg* libpgtypes* pgpgpg*
+Pin: origin apt.postgresql.org
+Pin-Priority: 1001
+EOF
+# <--------------------------->
+
 msg_info "Installing dependencies"
 $STD apt install --no-install-recommends -y \
   git \
@@ -64,7 +78,9 @@ $STD apt install --no-install-recommends -y \
   libhwy-dev \
   libwebp-dev \
   libaom-dev \
-  ccache
+  ccache \
+  postgresql-16 \
+  postgresql-16-pgvector
 
 setup_deb822_repo \
   "jellyfin" \
@@ -84,11 +100,9 @@ if [[ "$CTTYPE" == "0" && -d /dev/dri ]]; then
 fi
 msg_ok "Dependencies Installed"
 
-# <--- INSERT THE FIX HERE --->
-if [[ ! -f /etc/apt/sources.list.d/debian.sources ]]; then
-  msg_info "Modernizing Source Files"
-  $STD apt modernize-sources -y
-fi
+# <--- INSERT THE FIX FOR NEWER DEB822 FORMAT --->
+msg_info "Modernizing Source Files"
+$STD apt modernize-sources -y
 # <--------------------------->
 
 msg_info "Configuring Debian Testing Repo"
