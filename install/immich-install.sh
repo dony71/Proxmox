@@ -27,6 +27,7 @@ Package: postgresql* libpq* libecpg* libpgtypes* pgpgpg*
 Pin: origin apt.postgresql.org
 Pin-Priority: 1001
 EOF
+$STD apt update
 # <--------------------------->
 
 msg_info "Installing dependencies"
