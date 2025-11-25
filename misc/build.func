@@ -1350,7 +1350,10 @@ EOF'
   fi
   msg_ok "Customized LXC Container"
 
-  lxc-attach -n "$CTID" -- bash -c "$(curl -fsSL https://raw.githubusercontent.com/asylumexp/Proxmox/main/install/"$var_install".sh)"
+# Replace github repository to github dony71
+#  lxc-attach -n "$CTID" -- bash -c "$(curl -fsSL https://raw.githubusercontent.com/asylumexp/Proxmox/main/install/"$var_install".sh)"
+  lxc-attach -n "$CTID" -- bash -c "$(curl -fsSL https://raw.githubusercontent.com/dony71/Proxmox/main/install/"$var_install".sh)"
+# ------------------------------------------
 }
 
 # This function sets the description of the container.
