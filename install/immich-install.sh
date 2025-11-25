@@ -84,6 +84,13 @@ if [[ "$CTTYPE" == "0" && -d /dev/dri ]]; then
 fi
 msg_ok "Dependencies Installed"
 
+# <--- INSERT THE FIX HERE --->
+if [[ ! -f /etc/apt/sources.list.d/debian.sources ]]; then
+  msg_info "Modernizing Source Files"
+  $STD apt modernize-sources -y
+fi
+# <--------------------------->
+
 msg_info "Configuring Debian Testing Repo"
 sed -i 's/ trixie-updates/ trixie-updates testing/g' /etc/apt/sources.list.d/debian.sources
 cat <<EOF >/etc/apt/preferences.d/preferences
