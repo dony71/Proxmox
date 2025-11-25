@@ -101,8 +101,10 @@ fi
 msg_ok "Dependencies Installed"
 
 # <--- INSERT THE FIX FOR NEWER DEB822 FORMAT --->
-msg_info "Modernizing Source Files"
-$STD apt modernize-sources -y
+if [[ ! -f /etc/apt/sources.list.d/debian.sources ]]; then
+  msg_info "Modernizing Source Files"
+  $STD apt modernize-sources -y
+fi
 # <--------------------------->
 
 msg_info "Configuring Debian Testing Repo"
